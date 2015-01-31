@@ -12,13 +12,13 @@ td.removePairButton{
 }
 </style>
 <script>
-	
 $(document).ready(function() {
 	var keyList = ({{ keyList|safe }});
 	var valueList = ({{ valueList|safe }})
 	var keyValObj = {};
 	var pairCount = 0;
 	$("#submitFields").click(function(){
+		$('#myModal').modal();
 		   $.ajax({
                 url: "/processUpload",
                 data: JSON.stringify(keyValObj),
@@ -27,6 +27,15 @@ $(document).ready(function() {
                 contentType: "application/json; charset=utf-8",
                 success: function(data){
 
+                }
+        });
+	});
+	$("#runCommand").click(function() {
+		$.ajax({
+                url: "/testStream",
+                type: "POST",
+                success: function(data){
+                	$("#myModalBody").html(data);
                 }
         });
 	});
@@ -80,6 +89,20 @@ $(document).ready(function() {
 </script>
 <body>
 <div class="container-fluid" id="container">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Title</h4>
+					<div class="modal-body" id="myModalBody">
+					</div>
+					<div class="modal-footer">
+				        <button type="button" class="btn btn-success" id="runCommand">Run</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="well">
 		<div class="row">
 			<div class="col-sm-2">
@@ -105,7 +128,13 @@ $(document).ready(function() {
 			<tr><th>Index #</th><th>Key</th><th>Value</th></tr>
 		</table>
 </div> <!-- Container -->
-<div><input type="button" id="submitFields" name="submitFields" value="submit"></div>
-<div id="output"></div>
+<div>
+	<input type="button" id="submitFields" name="submitFields" value="submit">
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">modal</button>
+	<a href="/stream"><h2>RUN COMMAND</h2></a>
+</div>
+<div id="output">
+	sdfsdf
+</div>
 </body>
 </html>
