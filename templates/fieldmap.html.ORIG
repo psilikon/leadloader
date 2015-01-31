@@ -1,0 +1,70 @@
+<head>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<script>
+$(document).ready(function() {
+	$("#addField").click(function() {
+		var newValue = $("#fieldToAdd").val();
+		$("#container").append("<div class='row'><div class='col-sm-2'><p>"+newValue+"</p></div><div class='col-sm-1'><select>{% for option in vars %}<option value='{{ option }}'>{{ option 
+		}}</option>{% endfor %}</select></div></div>");
+	});
+
+});
+</script>
+<html>
+<div class="container" id="container">
+<div class="well">
+	<div class="row">
+		<div class="col-sm-3">
+			<select id="fieldToAdd">
+				{% for option in fields %}
+					<option value="{{ option }}">{{ option }}</option>
+				{% endfor %}
+			</select>
+		</div> <!--col-->
+		<div class="col-sm-2">
+			<input type="button" id="addField" name="addField" value="Add Field">
+		</div> <!--col-->
+	</div> <!--row-->
+</div> <!-- well-- >
+<div class="row">
+	<div class="col-sm-2">
+		<p>FIRST NAME</p>	
+	</div> <!--col-->
+	<div class="col-sm-1">
+		<select>
+			{% for option in vars %}
+				<option value="{{ option }}">{{ option }}</option>
+			{% endfor %}
+		</select>
+	</div> <!--col-->
+</div> <!--row-->
+<div class="row">
+	<div class="col-sm-2">
+		<p>LAST NAME</p>	
+	</div> <!--col-->
+	<div class="col-sm-1">
+		<select>
+			{% for option in vars %}
+				<option value="{{ option }}">{{ option }}</option>
+			{% endfor %}
+		</select>
+	</div> <!--col-->
+</div> <!--row-->
+<div class="row">
+	<div class="col-sm-2">
+		<p>PHONE</p>	
+	</div> <!--col-->
+	<div class="col-sm-1">
+		<select>
+			{% for option in vars %}
+				<option value="{{ option }}">{{ option }}</option>
+			{% endfor %}
+		</select>
+	</div> <!--col-->
+</div> <!--row-->
+</div> <!-- Container -->
+</html>

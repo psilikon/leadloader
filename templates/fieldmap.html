@@ -1,0 +1,111 @@
+<html>
+<title>Field Mapping</title>
+<head>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<style>
+td.removePairButton{
+	width: 90px;
+}
+</style>
+<script>
+	
+$(document).ready(function() {
+	var keyList = ({{ keyList|safe }});
+	var valueList = ({{ valueList|safe }})
+	var keyValObj = {};
+	var pairCount = 0;
+	$("#submitFields").click(function(){
+		   $.ajax({
+                url: "/processUpload",
+                data: JSON.stringify(keyValObj),
+                type: "POST",
+                dataType:'json',
+                contentType: "application/json; charset=utf-8",
+                success: function(data){
+
+                }
+        });
+	});
+	$(document).on('click', ".removeButton", function(event) {
+		var kv = event.target.id.split(":");
+		var key = kv[0];
+		var value = kv[1];
+		pairCount--;
+		delete keyValObj[key];
+		$(this).closest('tr').remove();
+		keyList.unshift(key);
+		valueList.unshift(value);
+		$("#valueToAdd").empty();
+		$("#keyToAdd").empty();
+		$.each(valueList, function(k,v){
+			$("#valueToAdd").append("<option value="+v+">"+v+"</option>")
+		});
+		$.each(keyList, function(k,v){
+			$("#keyToAdd").append("<option value="+v+">"+v+"</option>")
+		});
+		console.log(Object.keys(keyValObj).length);
+	});
+	$("#addField").click(function(){
+		var newKey = $("#keyToAdd").val();
+		var newValue = $("#valueToAdd").val();
+		var valToSplice = valueList.indexOf(newValue);
+		var keyToSplice = keyList.indexOf(newKey);
+		valueList.splice(valToSplice,1);
+		keyList.splice(keyToSplice,1);
+		console.log(Object.keys(keyValObj).length);
+		if(newValue){
+			pairCount++;
+			keyValObj[newKey] = newValue;
+			$("#selectedFields").append("<tr class='pairTableRow'><td>"+pairCount+"</td><td>"+newKey+"</td><td>"+newValue+"</td><td class='removePairButton'><input type='button' id='"+newKey+":"+newValue+"' value='Remove' class='removeButton'></td></tr>");
+		} else {
+			alert("No Values exist to pair with Keys")
+		}
+		$("#valueToAdd").empty();
+		$("#keyToAdd").empty();
+		$.each(valueList, function(k,v){
+			$("#valueToAdd").append("<option value="+v+">"+v+"</option>")
+		});
+		$.each(keyList, function(k,v){
+			$("#keyToAdd").append("<option value="+v+">"+v+"</option>")
+		});
+	});
+	$("#submitFields").click(function(){ 
+		
+	});
+});
+</script>
+<body>
+<div class="container-fluid" id="container">
+	<div class="well">
+		<div class="row">
+			<div class="col-sm-2">
+				<select id="keyToAdd">
+					{% for option in keyList %}
+						<option value="{{ option }}">{{ option }}</option>
+					{% endfor %}
+				</select>
+			</div> 
+			<div class="col-sm-3 col-sm-offset-2">
+				<select id="valueToAdd">
+					{% for option in valueList %}
+	        	        <option value="{{ option }}">{{ option }}</option>
+    		        {% endfor %}
+		        </select>
+		    </div> 
+			<div class="col-sm-2">
+				<input type="button" id="addField" name="addField" value="Add Key Value Pair">
+			</div> 
+		</div> 
+	</div> 
+	<table id="selectedFields" class="table table-bordered table-striped">
+			<tr><th>Index #</th><th>Key</th><th>Value</th></tr>
+		</table>
+</div> <!-- Container -->
+<div><input type="button" id="submitFields" name="submitFields" value="submit"></div>
+<div id="output"></div>
+</body>
+</html>
